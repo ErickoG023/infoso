@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infografía: Teoría del Conflicto de Georg Simmel</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+
+    <style>
+        :root {
+            --primary: #0A4F6B; /* Azul oscuro principal */
+            --primary-rgb: 10, 79, 107;
+            --secondary: #0077B6; /* Azul secundario vibrante */
+            --secondary-rgb: 0, 119, 182;
+            --accent: #EF476F; /* Coral/Rosa fuerte */
+            --accent-rgb: 239, 71, 111;
+            --highlight: #06D6A0; /* Verde menta */
+            --highlight-rgb: 6, 214, 160;
+            --custom-yellow: #FFD166;
+            --custom-yellow-rgb: 255, 209, 102;
+
+            --neutral-lightest: #F8F9FA; /* Casi blanco, para fondos */
+            --neutral-light: #E9ECEF;   /* Gris claro */
+            --neutral-medium: #CED4DA;  /* Gris medio */
+            --neutral-dark: #495057;    /* Gris oscuro */
+            --neutral-darkest: #212529; /* Casi negro */
+
+            --text-main: #343A40;      /* Color de texto principal (oscuro) */
+            --text-light: #F8F9FA;     /* Color de texto claro (casi blanco) */
+            --text-muted: #6C757D;     /* Color de texto atenuado (gris) */
+
+            --border-radius-sm: 0.5rem;
+            --border-radius-md: 0.75rem;
+            --border-radius-lg: 1.25rem;
+
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+            --shadow-lg: 0 10px 30px rgba(var(--primary-rgb), 0.1);
+        }
+
+        /* --- ESTILOS GENERALES --- */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--neutral-lightest);
+            background-image: linear-gradient(135deg, var(--neutral-lightest) 0%, #E0EAFC 100%);
+            color: var(--text-main); /* Texto oscuro por defecto para todo el cuerpo */
+            line-height: 1.6;
+        }
+
+        /* Clases de utilidad para colores de fondo personalizados */
+        .bg-accent { background-color: var(--accent) !important; }
+        .bg-highlight { background-color: var(--highlight) !important; }
+        .bg-blue-ncs { background-color: var(--secondary) !important; }
+        .bg-caribbean-green { background-color: var(--highlight) !important; }
+        .bg-coral-red { background-color: var(--accent) !important; }
+        .bg-sunglow-yellow { background-color: var(--custom-yellow) !important; }
+
+        /* Clases de utilidad para colores de texto personalizados */
+        /* Usar con precaución, asegurar contraste con el fondo */
+        .text-accent { color: var(--accent) !important; }
+        .text-highlight { color: var(--highlight) !important; }
+        .text-blue-ncs { color: var(--secondary) !important; }
+        .text-caribbean-green { color: var(--highlight) !important; }
+        .text-coral-red { color: var(--accent) !important; }
+        .text-sunglow-yellow { color: var(--custom-yellow) !important; }
+        .text-primary { color: var(--primary) !important; }
+
+
+        /* --- ENCABEZADO --- */
+        .gradient-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            border-bottom: 5px solid var(--highlight);
+            color: var(--text-light); /* Texto claro para el encabezado */
+        }
+        .gradient-header h1 {
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+        }
+        .gradient-header p {
+            color: rgba(255,255,255,0.85); /* Un poco menos opaco que el blanco puro */
+        }
+
+        /* --- TÍTULOS DE SECCIÓN --- */
+        .section-title {
+            position: relative;
+            padding-bottom: 1.25rem;
+            margin-bottom: 3rem;
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-align: center;
+            color: var(--primary); /* Color oscuro para los títulos */
+        }
+        .section-title:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(to right, var(--accent), var(--highlight));
+            border-radius: var(--border-radius-sm);
+        }
+
+        /* --- TARJETAS (CARDS) --- */
+        .card {
+            background: white; /* Fondo blanco por defecto */
+            color: var(--text-main); /* Texto oscuro por defecto dentro de las tarjetas */
+            border-radius: var(--border-radius-lg);
+            transition: all 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--neutral-light);
+            padding: 2rem;
+        }
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-lg);
+        }
+        .card p, .card ul { /* Párrafos y listas dentro de cards */
+            color: var(--text-main); /* Asegura texto oscuro */
+        }
+        .card h3, .card h4 { /* Encabezados dentro de cards */
+             color: var(--primary); /* Encabezados un poco más destacados */
+        }
+        .card strong { /* Texto en negritas dentro de cards */
+            color: var(--secondary); /* Resaltar negritas con color secundario */
+        }
+        /* Clases de Tailwind como text-gray-700 en el HTML también funcionarán bien sobre fondo blanco */
+
+        /* Card con fondo especial para introducción (translúcido) */
+        .card.bg-white\/90 {
+            background-color: rgba(255,255,255,0.92) !important;
+            backdrop-filter: blur(8px);
+            color: var(--text-main) !important; /* Asegurar texto oscuro */
+        }
+        .card.bg-white\/90 p, .card.bg-white\/90 strong {
+            color: inherit; /* Hereda el color oscuro del card padre */
+        }
+        .card.bg-white\/90 strong.text-blue-ncs {
+            color: var(--secondary) !important; /* Mantener este color específico si se usa */
+        }
+
+
+        /* Tarjetas con fondos de color claro (tintes) */
+        .card.bg-green-50 { /* Funciones integradoras */
+            background-color: rgba(var(--highlight-rgb), 0.08) !important;
+            border-left: 5px solid var(--highlight);
+        }
+        .card.bg-red-50 { /* Aspectos disociativos */
+            background-color: rgba(var(--accent-rgb), 0.08) !important;
+            border-left: 5px solid var(--accent);
+        }
+        /* Encabezados dentro de estas tarjetas con tinte */
+        .card.bg-green-50 h3, .card.bg-red-50 h3 {
+             color: var(--primary) !important; /* Usar color primario oscuro para contraste */
+        }
+        .card.bg-green-50 ul li, .card.bg-red-50 ul li {
+            color: var(--text-main) !important; /* Texto de lista oscuro */
+        }
+
+
+        /* --- DIAGRAMA DE FLUJO (FLOW STEPS) --- */
+        .flow-step {
+            position: relative;
+            background-color: var(--neutral-lightest); /* Fondo claro por defecto */
+            padding: 1rem 1.5rem;
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--shadow-sm);
+            text-align: center;
+            min-width: 160px;
+            transition: all 0.3s ease;
+            border: 1px solid var(--neutral-medium);
+            color: var(--text-main) !important; /* FUERZA el color de texto oscuro */
+        }
+        .flow-step:hover {
+            transform: scale(1.03);
+            box-shadow: var(--shadow-md);
+        }
+        /* Flow-steps con fondos de color (usarán clases .bg-accent, .text-white etc. del HTML) */
+        .flow-step.text-white { /* Cuando Tailwind aplica text-white */
+             color: var(--text-light) !important;
+        }
+        /* Si usas tus clases .bg-X sin .text-white de Tailwind, esto ayuda: */
+        .flow-step.bg-accent,
+        .flow-step.bg-highlight,
+        .flow-step.bg-blue-ncs {
+            color: var(--text-light) !important; /* Texto blanco sobre fondos de color definidos por estas clases */
+            border-color: transparent;
+        }
+
+        .flow-arrow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: var(--secondary) !important; /* Color azul para las flechas, forzado */
+            margin: 0.75rem;
+            opacity: 1; /* Opacidad completa */
+        }
+
+        /* --- DIAGRAMA DE VENN --- */
+        .venn-circle {
+            border-radius: 50%;
+            mix-blend-mode: multiply; /* Considerar 'normal' si hay problemas de color */
+            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            opacity: 0.9;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            box-shadow: inset 0 0 8px rgba(0,0,0,0.1);
+        }
+        .venn-circle:hover {
+            transform: scale(1.05);
+            opacity: 1;
+        }
+        /* Clases de texto para VENN, forzadas para asegurar visibilidad */
+        .venn-circle.text-white { color: var(--text-light) !important; }
+        .venn-circle.text-primary { color: var(--primary) !important; }
+        /* Si un .venn-circle no tiene .text-white o .text-primary, asegurar un color por defecto */
+        .venn-circle:not(.text-white):not(.text-primary) {
+            color: var(--text-light) !important; /* Default a texto claro si el fondo es coloreado */
+        }
+
+
+        /* --- TABLA --- */
+        table {
+            color: var(--text-main); /* Texto oscuro para la tabla */
+        }
+        table thead tr.bg-primary { /* Clase bg-primary de Tailwind */
+            background-color: var(--primary) !important;
+            color: var(--text-light) !important; /* Texto blanco en encabezado de tabla */
+        }
+        table th {
+            font-weight: 600;
+            color: inherit; /* Hereda color del 'tr' o 'thead' */
+        }
+        table td, table th {
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid var(--neutral-light);
+        }
+        table tbody tr:nth-child(even) {
+            background-color: rgba(var(--secondary-rgb), 0.03); /* Rayado sutil */
+        }
+        table tbody tr:hover {
+            background-color: rgba(var(--secondary-rgb), 0.1);
+            color: var(--primary) !important; /* Texto primario en hover */
+        }
+        .card.overflow-x-auto { padding: 0; }
+        .card.overflow-x-auto table {
+            border-radius: var(--border-radius-lg);
+            overflow: hidden;
+        }
+
+        /* --- CITA DESTACADA (BLOCKQUOTE) --- */
+        blockquote {
+            border-left: 4px solid var(--secondary);
+            padding: 1rem 1.5rem !important;
+            margin: 1.5rem 0 !important;
+            font-style: italic;
+            font-size: 1.15rem !important;
+            color: var(--text-main) !important; /* Texto oscuro para citas */
+        }
+        blockquote.bg-yellow-400 { /* Clase de Tailwind */
+            background-color: rgba(var(--custom-yellow-rgb), 0.15) !important;
+            color: var(--neutral-darkest) !important; /* Texto aún más oscuro para el fondo amarillo claro */
+            border-color: var(--custom-yellow) !important;
+        }
+        blockquote cite {
+            font-size: 0.9rem;
+            color: var(--text-muted) !important; /* Color atenuado para la cita */
+        }
+
+        /* --- GRÁFICO --- */
+        #tiposChart {
+            border-radius: var(--border-radius-md);
+            padding: 0.5rem;
+            background-color: rgba(255,255,255,0.7);
+            box-shadow: var(--shadow-sm);
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+<header class="gradient-header text-white py-12 shadow-xl">
+    <div class="container mx-auto px-6 text-center">
+        <h1 class="text-4xl md:text-5xl font-bold mb-4 animate__animated animate__fadeInDown">La Teoría del Conflicto<br><span class="text-2xl md:text-3xl font-light mt-2 block">Georg Simmel</span></h1>
+        <p class="text-lg md:text-xl leading-relaxed max-w-3xl mx-auto">Una exploración visual de la dialéctica social y sus manifestaciones</p>
+    </div>
+</header>
+
+<main class="container mx-auto px-6 py-12 space-y-20">
+    <section id="introduccion">
+        <h2 class="section-title">El Conflicto Según Simmel: Más que Destrucción</h2>
+        <div class="card bg-white/90 backdrop-blur-sm">
+            <p class="text-xl leading-relaxed mb-6 text-center">
+                Georg Simmel (1858-1918) nos ofrece una perspectiva revolucionaria: el conflicto no es una mera anomalía social, sino una <strong class="text-blue-ncs">forma fundamental de socialización</strong>.
+            </p>
+            <blockquote class="bg-yellow-400 p-6 rounded-lg shadow-md text-2xl font-semibold italic mb-6">
+                "Si toda acción recíproca entre hombres es una socialización, la lucha... ha de constituir necesariamente una socialización."<cite class="block text-right text-sm font-normal mt-2">- Georg Simmel (adaptado)</cite>
+            </blockquote>
+            <p class="text-lg text-center">Su enfoque formal analiza las interacciones sociales, reconociendo las contradicciones como motor de la vida social.</p>
+        </div>
+    </section>
+
+    <section id="socializacion">
+        <h2 class="section-title">El Paradigma: Socialización a Través del Antagonismo</h2>
+        <div class="card">
+            <p class="text-lg mb-6">El conflicto <span class="font-semibold text-highlight">vincula</span>. Incluso la lucha más encarnizada supera la indiferencia, la verdadera ausencia de lo social.</p>
+            <div class="flex flex-col md:flex-row items-center justify-around space-y-4 md:space-y-0 md:space-x-4 p-4">
+                <div class="flow-step">Indiferencia<br>(Ausencia de relación)</div>
+                <div class="flow-arrow">➡️</div>
+                <div class="flow-step bg-accent text-white">Conflicto<br>(Interacción Antagónica)</div>
+                <div class="flow-arrow">➡️</div>
+                <div class="flow-step">Vínculo Social<br>(Reconocimiento mutuo)</div>
+                <div class="flow-arrow">➡️</div>
+                <div class="flow-step bg-blue-ncs text-white">Unidad Potencial<br>(Incluso por resolución)</div>
+            </div>
+            <p class="mt-6 text-center">La resolución drástica puede ser un modo de "estar juntos"; el conflicto redefine comunidades y normas.</p>
+        </div>
+    </section>
+
+    <section id="funciones">
+        <h2 class="section-title">Funciones Ambivalentes: Creación y Destrucción</h2>
+        <div class="grid md:grid-cols-2 gap-8">
+            <div class="card bg-green-50">
+                <h3 class="text-2xl font-semibold mb-4 flex items-center"><span class="mr-2">✅</span>Funciones Integradoras</h3>
+                <ul> <li>Fortalece Cohesión Interna.</li>
+                    <li>Delimita Fronteras e Identidad.</li>
+                    <li>Establece Equilibrio de Poder.</li>
+                    <li>Impulsa Innovación y Normas.</li>
+                    <li>Facilita Comunicación.</li>
+                </ul>
+            </div>
+            <div class="card bg-red-50">
+                <h3 class="text-2xl font-semibold mb-4 flex items-center"><span class="mr-2">❌</span>Aspectos Disociativos</h3>
+                <ul>
+                    <li>Intensifica Hostilidad.</li>
+                    <li>Genera Polarización.</li>
+                    <li>Escalada y Violencia.</li>
+                    <li>Supresión de Disidencia.</li>
+                    <li>Destrucción de Estructuras.</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section id="tipos">
+        <h2 class="section-title">Tipos y Manifestaciones del Conflicto</h2>
+        <div class="grid md:grid-cols-2 gap-8">
+            <div class="card">
+                <h3 class="text-xl font-semibold mb-4">Intensidad Ilustrativa de Tipos de Conflicto</h3>
+                <p class="mb-4">Intensidad variable según la cercanía o causa.</p>
+                <div class="relative w-full h-64">
+                    <canvas id="tiposChart"></canvas>
+                </div>
+                <p class="text-sm text-muted mt-2 text-center">Datos ilustrativos.</p> </div>
+            <div class="card">
+                <h3 class="text-xl font-semibold mb-4">Formas Clave</h3>
+                <div class="space-y-4">
+                    <div>
+                        <h4 class="font-semibold">👥 Conflicto Interno vs Externo</h4>
+                        <p>El interno puede ser más intenso por la cercanía previa.</p>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold">🏆 Competencia (Konkurrenz)</h4>
+                        <p>Lucha indirecta por favor de un tercero, socialmente productiva.</p>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold">💡 Valores e Ideas</h4>
+                        <p>Conflictos ideológicos o morales, a menudo radicales.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="dinamica">
+        <h2 class="section-title">Dinámica: Origen, Desarrollo y Resolución</h2>
+        <div class="card">
+            <p class="text-lg mb-6">Desde causas objetivas y subjetivas hasta diversos desenlaces y transformaciones.</p>
+            <div class="flex flex-col items-center space-y-4 overflow-x-auto p-4">
+                <div class="flex flex-col md:flex-row items-center md:space-x-2">
+                    <div class="flow-step">Causas<br>- Objetivas<br>- Subjetivas</div>
+                    <div class="flow-arrow">➡️</div>
+                    <div class="flow-step bg-accent text-white">Estallido</div>
+                </div>
+                <div class="flow-arrow">⬇️</div>
+                <div class="flow-step">Desarrollo<br>- Intensidad variable<br>- Influencia social</div>
+                <div class="flow-arrow">⬇️</div>
+                <div class="flex flex-col md:flex-row items-center md:space-x-2">
+                    <div class="flow-step bg-highlight text-white">Desenlaces:<br>- Victoria<br>- Compromiso<br>- Conciliación</div>
+                    <div class="flow-arrow">➡️</div>
+                    <div class="flow-step bg-blue-ncs text-white">Transformación</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="moderacion">
+        <h2 class="section-title">Moderación: Intersección de Círculos Sociales</h2>
+        <div class="card">
+            <p class="mb-6">Las múltiples afiliaciones cruzadas moderan la polarización total.</p>
+            <div class="relative w-full h-64 flex items-center justify-center">
+                <div class="venn-circle bg-accent text-white w-32 h-32" style="top:10%; left:30%;">Familia</div>
+                <div class="venn-circle bg-sunglow-yellow text-primary w-32 h-32" style="top:10%; right:30%;">Trabajo</div>
+                <div class="venn-circle bg-caribbean-green text-white w-32 h-32" style="bottom:10%; left:20%;">Amigos</div>
+                <div class="venn-circle bg-blue-ncs text-white w-32 h-32" style="bottom:10%; right:20%;">Hobbies</div>
+                <div class="absolute text-primary font-bold text-2xl z-10">👤</div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contexto">
+        <h2 class="section-title">Simmel en el Debate Sociológico</h2>
+        <div class="card overflow-x-auto">
+            <table class="w-full min-w-max text-left border-collapse">
+                <thead>
+                    <tr class="bg-primary text-white"> <th class="p-4">Teórico</th>
+                        <th class="p-4">Enfoque</th>
+                        <th class="p-4">Relación con Simmel</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="border-b hover:bg-gray-100">
+                        <td class="p-4">Karl Marx</td>
+                        <td class="p-4">Conflicto de clases</td>
+                        <td class="p-4">Simmel amplía: no solo económico</td>
+                    </tr>
+                    <tr class="border-b hover:bg-gray-100">
+                        <td class="p-4">Max Weber</td>
+                        <td class="p-4">Acción social</td>
+                        <td class="p-4">Complementa con enfoque en interacciones</td>
+                    </tr>
+                    <tr class="hover:bg-gray-100">
+                        <td class="p-4">Émile Durkheim</td>
+                        <td class="p-4">Hechos sociales</td>
+                        <td class="p-4">Contrapunto: conflicto vs cohesión</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+</main>
+
+<script>
+    // Configuración del gráfico de barras
+    const ctx = document.getElementById('tiposChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Ideológico', 'Económico', 'Relacional', 'Existencial'],
+            datasets: [{
+                label: 'Intensidad del Conflicto',
+                data: [8, 6, 5, 7],
+                backgroundColor: [
+                    `rgba(${getComputedStyle(document.documentElement).getPropertyValue('--accent-rgb').trim()}, 0.7)`,
+                    `rgba(${getComputedStyle(document.documentElement).getPropertyValue('--secondary-rgb').trim()}, 0.7)`,
+                    `rgba(${getComputedStyle(document.documentElement).getPropertyValue('--highlight-rgb').trim()}, 0.7)`,
+                    `rgba(${getComputedStyle(document.documentElement).getPropertyValue('--custom-yellow-rgb').trim()}, 0.7)`
+                ],
+                borderColor: [
+                    `rgb(${getComputedStyle(document.documentElement).getPropertyValue('--accent-rgb').trim()})`,
+                    `rgb(${getComputedStyle(document.documentElement).getPropertyValue('--secondary-rgb').trim()})`,
+                    `rgb(${getComputedStyle(document.documentElement).getPropertyValue('--highlight-rgb').trim()})`,
+                    `rgb(${getComputedStyle(document.documentElement).getPropertyValue('--custom-yellow-rgb').trim()})`
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 10,
+                    ticks: { color: `rgb(${getComputedStyle(document.documentElement).getPropertyValue('--primary-rgb').trim()})` || '#0A4F6B' },
+                    grid: { color: 'rgba(0,0,0,0.05)'}
+                },
+                x: {
+                    ticks: { color: `rgb(${getComputedStyle(document.documentElement).getPropertyValue('--primary-rgb').trim()})` || '#0A4F6B' },
+                    grid: { display: false }
+                }
+            },
+            plugins: {
+                legend: { display: false }
+            }
+        }
+    });
+</script>
+
+</body>
+</html>
